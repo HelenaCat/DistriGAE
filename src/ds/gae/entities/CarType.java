@@ -67,6 +67,10 @@ public class CarType {
         return key;
     }
     
+    public Set<Car> getCars(){
+    	return this.cars;
+    }
+    
     public void addCar(Car car){
     	this.cars.add(car);
     }

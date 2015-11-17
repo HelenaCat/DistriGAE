@@ -47,8 +47,8 @@ public class CarRentalServletContextListener implements ServletContextListener {
 		Logger.getLogger(CarRentalServletContextListener.class.getName()).log(Level.INFO, "loading {0} from file {1}", new Object[]{name, datafile});
         try {
         	
-            Set<Car> cars = loadData(name, datafile);
-            CarRentalCompany company = new CarRentalCompany(name, cars);
+            Set<CarType> carTypes = loadData(name, datafile);
+            CarRentalCompany company = new CarRentalCompany(name, carTypes);
             
     		// FIXME: use persistence instead
             CarRentalModel.get().CRCS.put(name, company);
@@ -60,10 +60,10 @@ public class CarRentalServletContextListener implements ServletContextListener {
         }
 	}
 	
-	public static Set<Car> loadData(String name, String datafile) throws NumberFormatException, IOException {
+	public static Set<CarType> loadData(String name, String datafile) throws NumberFormatException, IOException {
 		// FIXME: adapt the implementation of this method to your entity structure
 		
-		Set<Car> cars = new HashSet<Car>();
+		Set<CarType> carTypes = new HashSet<CarType>();
 		int carId = 1;
 
 		//open file from jar
@@ -84,13 +84,14 @@ public class CarRentalServletContextListener implements ServletContextListener {
 					Float.parseFloat(csvReader.nextToken()),
 					Double.parseDouble(csvReader.nextToken()),
 					Boolean.parseBoolean(csvReader.nextToken()));
+			carTypes.add(type);
 			//create N new cars with given type, where N is the 5th field
 			for (int i = Integer.parseInt(csvReader.nextToken()); i > 0; i--) {
-				cars.add(new Car(carId++, type));
+				type.addCar(new Car(carId++, type.getName()));
 			}
 		}
 
-		return cars;
+		return carTypes;
 	}
 
 	@Override

@@ -43,12 +43,10 @@ public class CarRentalCompany {
 	 * CONSTRUCTOR *
 	 ***************/
 
-	public CarRentalCompany(String name, Set<Car> cars) {
+	public CarRentalCompany(String name, Set<CarType> carTypes) {
 		logger.log(Level.INFO, "<{0}> Car Rental Company {0} starting up...", name);
 		setName(name);
-		this.cars = cars; //TODO anders doen
-		for(Car car:cars)
-			carTypes.add(car.getType());		
+		this.carTypes = carTypes;
 	}
 	
 	public CarRentalCompany(){
@@ -94,12 +92,14 @@ public class CarRentalCompany {
 		throw new IllegalArgumentException("<" + carTypeName + "> No car type of name " + carTypeName);
 	}
 	
-	//TODO veranderen als Cars en CarTypes omgedraaid zijn
 	public Set<CarType> getAvailableCarTypes(Date start, Date end) {
 		Set<CarType> availableCarTypes = new HashSet<CarType>();
-		for (Car car : cars) {
-			if (car.isAvailable(start, end)) {
-				availableCarTypes.add(car.getType());
+		for (CarType type : carTypes){
+			for (Car car: type.getCars()){
+				if(car.isAvailable(start, end)){
+					availableCarTypes.add(type);
+					break;
+				}
 			}
 		}
 		return availableCarTypes;
@@ -110,7 +110,7 @@ public class CarRentalCompany {
 	 *********/
 	
 	private Car getCar(int uid) {
-		for (Car car : cars) {
+		for (Car car : this.getCars()){
 			if (car.getId() == uid)
 				return car;
 		}
@@ -118,13 +118,17 @@ public class CarRentalCompany {
 	}
 	
 	public Set<Car> getCars() {
+		Set<Car> cars = new HashSet<Car>();
+		for (CarType type : carTypes){
+			cars.addAll(type.getCars());
+		}
     	return cars;
     }
 	
 	private List<Car> getAvailableCars(String carType, Date start, Date end) {
 		List<Car> availableCars = new LinkedList<Car>();
-		for (Car car : cars) {
-			if (car.getType().getName().equals(carType) && car.isAvailable(start, end)) {
+		for (Car car : this.getCars()) {
+			if (car.getType().equals(carType) && car.isAvailable(start, end)) {
 				availableCars.add(car);
 			}
 		}

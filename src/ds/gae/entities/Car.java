@@ -17,8 +17,7 @@ import com.google.appengine.api.datastore.Key;
 public class Car {
 
     private int id;
-    @ManyToOne
-    private CarType type;
+    private String type;
     @OneToMany
     private Set<Reservation> reservations;
     
@@ -30,7 +29,7 @@ public class Car {
      * CONSTRUCTOR *
      ***************/
     
-    public Car(int uid, CarType type) {
+    public Car(int uid, String type) {
     	this.id = uid;
         this.type = type;
         this.reservations = new HashSet<Reservation>();
@@ -60,7 +59,7 @@ public class Car {
      * CAR TYPE *
      ************/
     
-    public CarType getType() {
+    public String getType() {
         return type;
     }
 
