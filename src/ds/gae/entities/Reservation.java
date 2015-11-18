@@ -1,5 +1,6 @@
 package ds.gae.entities;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,19 +9,19 @@ import javax.persistence.Id;
 import com.google.appengine.api.datastore.Key;
 
 @Entity
+@DiscriminatorValue("RES")
 public class Reservation extends Quote {
 
-    private int carId;
+    private long carId;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
     
     /***************
 	 * CONSTRUCTOR *
 	 ***************/
 
-    Reservation(Quote quote, int carId) {
+    Reservation(Quote quote, long carId) {
     	super(quote.getCarRenter(), quote.getStartDate(), quote.getEndDate(), 
     			quote.getRentalCompany(), quote.getCarType(), quote.getRentalPrice());
         this.carId = carId;
@@ -34,7 +35,7 @@ public class Reservation extends Quote {
      * ID *
      ******/
     
-    public int getCarId() {
+    public long getCarId() {
     	return carId;
     }
     
@@ -43,6 +44,10 @@ public class Reservation extends Quote {
      ******/
     public Key getKey(){
     	return key;
+    }
+    
+    public void setKey(Key key){
+    	this.key = key;
     }
     
     /*************
@@ -59,7 +64,7 @@ public class Reservation extends Quote {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + carId;
+		result = prime * result + (int) carId;
 		return result;
 	}
 

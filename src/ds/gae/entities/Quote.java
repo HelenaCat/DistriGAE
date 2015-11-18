@@ -2,14 +2,20 @@ package ds.gae.entities;
 
 import java.util.Date;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.google.appengine.api.datastore.Key;
 
 @Entity
+@Table(name = "QUOTE_HIERARCHY")
+@DiscriminatorColumn(name = "DISCRIMINATOR")
+@DiscriminatorValue("PERSON")
 public class Quote {
 
     private Date startDate;

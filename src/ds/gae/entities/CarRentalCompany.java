@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PrimaryKey;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -31,22 +32,20 @@ import ds.gae.ReservationException;
 public class CarRentalCompany {
 
 	private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
-	
-	private String name;
 	@Id
+	private String name;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private Set<CarType> carTypes = new HashSet<CarType>();
 
 	/***************
 	 * CONSTRUCTOR *
 	 ***************/
 
-	public CarRentalCompany(String name, Set<CarType> carTypes) {
+	public CarRentalCompany(String name) {
 		logger.log(Level.INFO, "<{0}> Car Rental Company {0} starting up...", name);
 		setName(name);
-		this.carTypes = carTypes;
 	}
 	
 	public CarRentalCompany(){
@@ -70,6 +69,14 @@ public class CarRentalCompany {
 	 *************/
 
 	public Collection<CarType> getAllCarTypes() {
+		return carTypes;
+	}
+	
+	public Set<String> getAllCarTypeStrings(){
+		Set<String> carTypes = new HashSet<String>();
+		for(CarType type : this.getAllCarTypes()){
+			carTypes.add(type.getName());
+		}
 		return carTypes;
 	}
 	
@@ -103,6 +110,13 @@ public class CarRentalCompany {
 			}
 		}
 		return availableCarTypes;
+	}
+	
+	public void addCarType(CarType type){
+		System.out.println("CarRentalCompanyKey " + this.key); //TODO
+		Key childKey = this.key.getChild(CarType.class.getName(), type.getName());
+		type.setKey(childKey);
+		this.carTypes.add(type);
 	}
 		
 	/*********
@@ -176,6 +190,6 @@ public class CarRentalCompany {
 
 	public void cancelReservation(Reservation res) {
 		logger.log(Level.INFO, "<{0}> Cancelling reservation {1}", new Object[]{name, res.toString()});
-		getCar(res.getCarId()).removeReservation(res);
+		getCar((int) res.getCarId()).removeReservation(res);
 	}
 }

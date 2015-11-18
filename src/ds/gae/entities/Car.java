@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,20 +17,19 @@ import com.google.appengine.api.datastore.Key;
 @Entity
 public class Car {
 
-    private int id;
+    private long id;
     private String type;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Reservation> reservations;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
 
     /***************
      * CONSTRUCTOR *
      ***************/
     
-    public Car(int uid, String type) {
+    public Car(long uid, String type) {
     	this.id = uid;
         this.type = type;
         this.reservations = new HashSet<Reservation>();
@@ -46,12 +46,16 @@ public class Car {
     public Key getKey(){
     	return key;
     }
+    
+    public void setKey(Key key){
+    	this.key = key;
+    }
 
     /******
      * ID *
      ******/
     
-    public int getId() {
+    public long getId() {
     	return id;
     }
     
@@ -84,6 +88,8 @@ public class Car {
     }
     
     public void addReservation(Reservation res) {
+    	Key childKey = this.key.getChild(Reservation.class.getName(), res.getCarId());
+    	res.setKey(childKey);
         reservations.add(res);
     }
     
