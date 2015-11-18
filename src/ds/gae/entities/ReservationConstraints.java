@@ -9,29 +9,17 @@ import javax.persistence.Id;
 
 import com.google.appengine.api.datastore.Key;
 
-@Entity
 public class ReservationConstraints {
     
     private Date startDate;
     private Date endDate;
     private String carType;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Key key;
-	
+
     public ReservationConstraints(Date start, Date end, String carType){
     	setStartDate(start);
     	setEndDate(end);
     	setCarType(carType);
-    }
-    
-    public ReservationConstraints(){
-    	
-    }
-    
-    public Key getKey(){
-    	return key;
     }
     
     public Date getStartDate() {

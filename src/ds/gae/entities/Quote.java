@@ -8,14 +8,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 import com.google.appengine.api.datastore.Key;
 
 @Entity
-@Table(name = "QUOTE_HIERARCHY")
-@DiscriminatorColumn(name = "DISCRIMINATOR")
-@DiscriminatorValue("PERSON")
+//@Table(name = "QUOTE_HIERARCHY")
+//@DiscriminatorColumn(name = "DISCRIMINATOR")
+//@DiscriminatorValue("PERSON")
+@MappedSuperclass
 public class Quote {
 
     private Date startDate;

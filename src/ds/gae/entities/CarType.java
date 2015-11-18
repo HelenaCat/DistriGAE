@@ -25,6 +25,7 @@ public class CarType {
     private float trunkSpace;
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
     
     /***************
@@ -67,18 +68,11 @@ public class CarType {
         return key;
     }
     
-    public void setKey(Key key){
-    	this.key = key;
-    }
-    
     public Set<Car> getCars(){
     	return this.cars;
     }
     
     public void addCar(Car car){
-    	System.out.println(this.key); //TODO
-    	Key childKey = this.key.getChild(Car.class.getName(), car.getId());
-    	car.setKey(childKey);
     	this.cars.add(car);
     }
 

@@ -23,6 +23,7 @@ public class Car {
     private Set<Reservation> reservations;
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Key key;
 
     /***************
@@ -45,10 +46,6 @@ public class Car {
     
     public Key getKey(){
     	return key;
-    }
-    
-    public void setKey(Key key){
-    	this.key = key;
     }
 
     /******
@@ -88,8 +85,6 @@ public class Car {
     }
     
     public void addReservation(Reservation res) {
-    	Key childKey = this.key.getChild(Reservation.class.getName(), res.getCarId());
-    	res.setKey(childKey);
         reservations.add(res);
     }
     

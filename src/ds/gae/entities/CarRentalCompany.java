@@ -34,8 +34,6 @@ public class CarRentalCompany {
 	private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
 	@Id
 	private String name;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Key key;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<CarType> carTypes = new HashSet<CarType>();
 
@@ -43,9 +41,10 @@ public class CarRentalCompany {
 	 * CONSTRUCTOR *
 	 ***************/
 
-	public CarRentalCompany(String name) {
+	public CarRentalCompany(String name, Set<CarType> carTypes) {
 		logger.log(Level.INFO, "<{0}> Car Rental Company {0} starting up...", name);
 		setName(name);
+		this.carTypes = carTypes;
 	}
 	
 	public CarRentalCompany(){
@@ -110,13 +109,6 @@ public class CarRentalCompany {
 			}
 		}
 		return availableCarTypes;
-	}
-	
-	public void addCarType(CarType type){
-		System.out.println("CarRentalCompanyKey " + this.key); //TODO
-		Key childKey = this.key.getChild(CarType.class.getName(), type.getName());
-		type.setKey(childKey);
-		this.carTypes.add(type);
 	}
 		
 	/*********

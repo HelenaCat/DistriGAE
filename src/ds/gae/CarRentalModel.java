@@ -162,7 +162,6 @@ public class CarRentalModel {
 		List<Reservation> out = new ArrayList<Reservation>();
 
 		try{
-			Collection<String> names = getAllRentalCompanyNames();
 
 			for(String name : getAllRentalCompanyNames()){
 				companies.add(em.find(CarRentalCompany.class,name));
@@ -246,19 +245,20 @@ public class CarRentalModel {
 	private List<Car> getCarsByCarType(String crcName, CarType carType) {	
 		EntityManager em = EMF.get().createEntityManager();
 		List<Car> out = new ArrayList<Car>(); 
-		Set<CarRentalCompany> companies = new HashSet<CarRentalCompany>();
-
+		//Set<CarRentalCompany> companies = new HashSet<CarRentalCompany>();
+		CarRentalCompany company = em.find(CarRentalCompany.class,crcName);
 		try{
-			for(String name : getAllRentalCompanyNames()){
-				companies.add(em.find(CarRentalCompany.class,name));
-			}
-			for(CarRentalCompany crc : companies) {
-				for (Car c : crc.getCars()) {
+			//TODO
+			//for(String name : getAllRentalCompanyNames()){
+			//	companies.add(em.find(CarRentalCompany.class,name));
+			//}
+			//for(CarRentalCompany crc : companies) {
+				for (Car c : company.getCars()) {
 					if (c.getType().equals(carType.getName())) { 
 						out.add(c);
 					}
 				}
-			}
+			//}
 			return out;
 		}
 		finally{

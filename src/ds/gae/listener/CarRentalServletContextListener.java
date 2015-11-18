@@ -28,9 +28,9 @@ public class CarRentalServletContextListener implements ServletContextListener {
 		// This will be invoked as part of a warming request, 
 		// or the first user request if no warming request was invoked.
 		// check if dummy data is available, and add if necessary
-		//if(!isDummyDataAvailable()) { //TODO is weg zodat de lijn hieronder uitgevoerd wordt (gebeurde anders niet)
+		if(!isDummyDataAvailable()) {
 			addDummyData();
-		//}
+		}
 	}
 	
 	private boolean isDummyDataAvailable() {
@@ -58,18 +58,9 @@ public class CarRentalServletContextListener implements ServletContextListener {
 		Logger.getLogger(CarRentalServletContextListener.class.getName()).log(Level.INFO, "loading {0} from file {1}", new Object[]{name, datafile});
 		EntityManager em = EMF.get().createEntityManager();
 		try {
-        	System.out.println("loadRental opgeroepen"); //TODO
             Set<CarType> carTypes = loadData(name, datafile);
-            CarRentalCompany company = new CarRentalCompany(name);//TODO
-            em.persist(company);
-            for(CarType type : carTypes){ //TODO
-            	company.addCarType(type);
-            }
-            for(Car car: cars){
-            	company.getCarType(car.getType()).addCar(car);
-            }
-            cars.clear();
-            
+            CarRentalCompany company = new CarRentalCompany(name, carTypes);//TODO
+            em.persist(company);          
 
         } catch (NumberFormatException ex) {
             Logger.getLogger(CarRentalServletContextListener.class.getName()).log(Level.SEVERE, "bad file", ex);
@@ -81,10 +72,8 @@ public class CarRentalServletContextListener implements ServletContextListener {
 		}
 	}
 	
-	private static Set<Car> cars = new HashSet<Car>();//TODO
 	
 	public static Set<CarType> loadData(String name, String datafile) throws NumberFormatException, IOException {
-		System.out.println("loadData opgeroepen"); //TODO
 		Set<CarType> carTypes = new HashSet<CarType>();
 		int carId = 1;
 
@@ -109,7 +98,7 @@ public class CarRentalServletContextListener implements ServletContextListener {
 			carTypes.add(type);
 			//create N new cars with given type, where N is the 5th field
 			for (int i = Integer.parseInt(csvReader.nextToken()); i > 0; i--) {
-				cars.add(new Car(carId++, type.getName()));//TODO
+				type.addCar(new Car(carId++, type.getName()));
 			}
 		}
 

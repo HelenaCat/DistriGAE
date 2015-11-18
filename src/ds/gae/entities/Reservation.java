@@ -5,17 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 import com.google.appengine.api.datastore.Key;
 
 @Entity
-@DiscriminatorValue("RES")
+
+//@DiscriminatorValue("RES")
 public class Reservation extends Quote {
 
     private long carId;
-    
-    @Id
-    private Key key;
     
     /***************
 	 * CONSTRUCTOR *
@@ -39,16 +38,6 @@ public class Reservation extends Quote {
     	return carId;
     }
     
-    /*******
-     * KEY *
-     ******/
-    public Key getKey(){
-    	return key;
-    }
-    
-    public void setKey(Key key){
-    	this.key = key;
-    }
     
     /*************
      * TO STRING *
