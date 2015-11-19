@@ -11,7 +11,6 @@ import com.google.appengine.api.datastore.Key;
 
 @Entity
 
-//@DiscriminatorValue("RES")
 public class Reservation extends Quote {
 
     private long carId;

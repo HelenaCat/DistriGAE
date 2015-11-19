@@ -38,10 +38,6 @@ public class CarRentalServletContextListener implements ServletContextListener {
 		EntityManager em = EMF.get().createEntityManager();
 		try{
 			return em.find(CarRentalCompany.class, "Hertz") != null;
-		//return (em.createQuery( TODO wegdoen
-		//		 "SELECT c.name "
-		//	     + "FROM CarRentalCompany c"
-		//		 + "WHERE c.name = :name").setParameter("name", "Hertz").getResultList()).size() > 0;
 		}
 		finally{
 			em.close();

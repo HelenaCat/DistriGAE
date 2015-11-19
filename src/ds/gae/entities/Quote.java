@@ -14,9 +14,6 @@ import javax.persistence.Table;
 import com.google.appengine.api.datastore.Key;
 
 @Entity
-//@Table(name = "QUOTE_HIERARCHY")
-//@DiscriminatorColumn(name = "DISCRIMINATOR")
-//@DiscriminatorValue("PERSON")
 @MappedSuperclass
 public class Quote {
 

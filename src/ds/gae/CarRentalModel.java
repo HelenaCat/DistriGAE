@@ -43,14 +43,7 @@ public class CarRentalModel {
 		EntityManager em = EMF.get().createEntityManager();
 		try{
 			return em.find(CarRentalCompany.class, crcName).getAllCarTypeStrings();
-			//TODO
-			//return em.createQuery(
-			// "SELECT c.name "
-			//  + "FROM CarRentalCompany c "
-			// + "WHERE c.name = :name").setParameter("name", crcName).getFirstResult().getAllCarTypeStrings();
-		}
-		//Query query = em.createQuery("SELECT crc.cartypes FROM CarRentalCompany crc WHERE crc.name = :name");
-		finally{
+		}finally{
 			em.close();
 		}
 
@@ -139,10 +132,20 @@ public class CarRentalModel {
 	 * 			One of the quotes cannot be confirmed. 
 	 * 			Therefore none of the given quotes is confirmed.
 	 */
-	public List<Reservation> confirmQuotes(List<Quote> quotes) throws ReservationException {    	
+	public List<Reservation> confirmQuotes(List<Quote> quotes) throws ReservationException {  
+		EntityManager em = EMF.get().createEntityManager();
 		List<Reservation> reservations = new ArrayList<Reservation>();
 		for(Quote quote : quotes){
-			reservations.add(confirmQuote(quote));
+			try {
+				reservations.add(confirmQuote(quote));
+			} catch (ReservationException e) {
+				for (Reservation res: reservations){
+					em.find(CarRentalCompany.class,res.getRentalCompany()).cancelReservation(res);
+				}
+				throw e;
+			} finally{
+				em.close();
+			}
 		}
 		return reservations;
 	}
