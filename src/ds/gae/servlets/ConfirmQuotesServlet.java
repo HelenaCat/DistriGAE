@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+
+
 import ds.gae.CarRentalModel;
 import ds.gae.ReservationException;
 import ds.gae.entities.Quote;
@@ -25,26 +30,28 @@ public class ConfirmQuotesServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		HttpSession session = req.getSession();
+		String key = session.getId();
 		HashMap<String, ArrayList<Quote>> allQuotes = (HashMap<String, ArrayList<Quote>>) session.getAttribute("quotes");
 
-		try {
-			ArrayList<Quote> qs = new ArrayList<Quote>();
+		
+		ArrayList<Quote> qs = new ArrayList<Quote>();
 			
-			for (String crcName : allQuotes.keySet()) {
-				qs.addAll(allQuotes.get(crcName));
-			}
-			CarRentalModel.get().confirmQuotes(qs);
-			
-			session.setAttribute("quotes", new HashMap<String, ArrayList<Quote>>());
-			
-			// TODO
-			// If you wish confirmQuotesReply.jsp to be shown to the client as
-			// a response of calling this servlet, please replace the following line 
-			// with resp.sendRedirect(JSPSite.CONFIRM_QUOTES_RESPONSE.url());
-			resp.sendRedirect(JSPSite.CREATE_QUOTES.url());
-		} catch (ReservationException e) {
-			session.setAttribute("errorMsg", ViewTools.encodeHTML(e.getMessage()));
-			resp.sendRedirect(JSPSite.RESERVATION_ERROR.url());				
+		for (String crcName : allQuotes.keySet()) {
+			qs.addAll(allQuotes.get(crcName));
 		}
+		//DeferredTask aanmaken
+		ConfirmQuotesTask task = new ConfirmQuotesTask(qs);
+		//Task toevoegen aan default queue
+		QueueFactory.getDefaultQueue().add(TaskOptions.Builder.withParam("key", key).param("payload", payload).param("ck", channelKey).param("renter", username));
+		
+		//CarRentalModel.get().confirmQuotes(qs);
+		
+		session.setAttribute("quotes", new HashMap<String, ArrayList<Quote>>());
+			
+		// TODO
+		// If you wish confirmQuotesReply.jsp to be shown to the client as
+		// a response of calling this servlet, please replace the following line 
+		// with resp.sendRedirect(JSPSite.CONFIRM_QUOTES_RESPONSE.url());
+		resp.sendRedirect(JSPSite.CREATE_QUOTES.url());
 	}
 }
