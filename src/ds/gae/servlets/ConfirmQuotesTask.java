@@ -1,6 +1,8 @@
 package ds.gae.servlets;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ds.gae.CarRentalModel;
 import ds.gae.ReservationException;
@@ -10,6 +12,8 @@ import com.google.appengine.api.taskqueue.DeferredTask;
 
 public class ConfirmQuotesTask implements DeferredTask {
 
+	private static final Logger log = Logger.getLogger(ConfirmQuotesTask.class.getName());
+	
 	private List<Quote> quotes;
 	public ConfirmQuotesTask(List<Quote> quotes){
 		this.quotes = quotes;
@@ -19,9 +23,11 @@ public class ConfirmQuotesTask implements DeferredTask {
 	public void run() {
 		try {
 			CarRentalModel.get().confirmQuotes(quotes);
-			//TODO log if it succeeds
+			//log.info("Confirming quote(s) succeeded!");
+			log.log(Level.INFO, "Confirming quote(s) succeeded!");
 		} catch (ReservationException e) {
-			//TODO log if confirming doesn't succeed
+			//log.warning("Confirming quote(s) failed!");
+			log.log(Level.INFO, "Confirming quote(s) failed!");
 		}
 	}
 }

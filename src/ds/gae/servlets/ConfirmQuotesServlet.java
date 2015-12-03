@@ -50,8 +50,8 @@ public class ConfirmQuotesServlet extends HttpServlet {
 			
 		// TODO
 		// If you wish confirmQuotesReply.jsp to be shown to the client as
-		// a response of calling this servlet, please replace the following line 
-		// with resp.sendRedirect(JSPSite.CONFIRM_QUOTES_RESPONSE.url());
-		resp.sendRedirect(JSPSite.CREATE_QUOTES.url());
+		// a response of calling this servlet, please replace the following line with 
+		resp.sendRedirect(JSPSite.CONFIRM_QUOTES_RESPONSE.url());
+		//resp.sendRedirect(JSPSite.CREATE_QUOTES.url());
 	}
 }

@@ -1,3 +1,5 @@
+<%@page import="com.google.appengine.api.log.*"%>
+<%@page import="java.io.PrintWriter"%>
 <%@page import="ds.gae.view.JSPSite"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -53,8 +55,20 @@ for (JSPSite site : JSPSite.publiclyLinkedValues()) {
 				<H2>Reply</H2>
 				<div class="group">
 					<p>
-					TODO: Here you can give some information to client who is currently 
-							logged in as user <%=renter%>.
+						<%
+						LogQuery query = LogQuery.Builder.withDefaults();
+						query.includeAppLogs(true);
+									
+						PrintWriter writer = new PrintWriter(out);
+						for (RequestLogs record : LogServiceFactory.getLogService().fetch(query)){
+							for (AppLogLine appLog : record.getAppLogLines()) {
+								if(appLog.getLogMessage().contains("Confirming")){
+									writer.println(appLog.getLogMessage()+"<br /> <br />"); 
+									
+								}
+							}
+						}
+						%>
 					</p>
 				</div>
 			</div>
