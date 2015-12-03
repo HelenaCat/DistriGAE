@@ -1,5 +1,6 @@
 package ds.gae.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.DiscriminatorColumn;
@@ -15,7 +16,7 @@ import com.google.appengine.api.datastore.Key;
 
 @Entity
 @MappedSuperclass
-public class Quote {
+public class Quote implements Serializable{
 
     private Date startDate;
     private Date endDate;

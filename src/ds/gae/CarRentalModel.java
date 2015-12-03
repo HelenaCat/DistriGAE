@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import ds.gae.entities.Car;
@@ -134,19 +135,25 @@ public class CarRentalModel {
 	 */
 	public List<Reservation> confirmQuotes(List<Quote> quotes) throws ReservationException {  
 		EntityManager em = EMF.get().createEntityManager();
+		
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
 		List<Reservation> reservations = new ArrayList<Reservation>();
-		for(Quote quote : quotes){
-			try {
+		
+		try{
+			for(Quote quote : quotes){	
 				reservations.add(confirmQuote(quote));
-			} catch (ReservationException e) {
-				for (Reservation res: reservations){
-					em.find(CarRentalCompany.class,res.getRentalCompany()).cancelReservation(res);
-				}
-				throw e;
-			} finally{
-				em.close();
 			}
+			tx.commit();
+		} 
+		finally{
+			if (tx.isActive()) {
+				tx.rollback();
+			} 
+			em.close();
 		}
+		
 		return reservations;
 	}
 
