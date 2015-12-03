@@ -42,7 +42,7 @@ public class ConfirmQuotesServlet extends HttpServlet {
 		//DeferredTask aanmaken
 		ConfirmQuotesTask task = new ConfirmQuotesTask(qs);
 		//Task toevoegen aan default queue
-		QueueFactory.getDefaultQueue().add(TaskOptions.Builder.withParam("key", key).param("payload", payload).param("ck", channelKey).param("renter", username));
+		QueueFactory.getDefaultQueue().add(TaskOptions.Builder.withPayload(task));
 		
 		//CarRentalModel.get().confirmQuotes(qs);
 		

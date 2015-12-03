@@ -20,7 +20,7 @@ public class ConfirmQuotesTask implements DeferredTask {
 		try {
 			CarRentalModel.get().confirmQuotes(quotes);
 		} catch (ReservationException e) {
-			//TODO do something if confirming doesn't succeed
+			//TODO do something if confirming doesn't succeed??
 		}
 	}
 }
